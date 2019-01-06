@@ -9,7 +9,7 @@ This repository provides an easy way to spin up and tear down Wordpress environm
 
 ## Usage
 
-To use this repository, add it as submodule to your Wordpress plugin/theme/... repository.
+To use this repository, add it as submodule (under the directory `wordpress-test-env`) to your Wordpress plugin/theme/... repository.
 
 Then create the following 3 files:
 
