@@ -5,7 +5,9 @@ param(
 
     [string] $WordpressVersion = '',
 
-    [string] $PhpVersion = ''
+    [string] $PhpVersion = '',
+
+    [switch] $KeepVolumes
 )
 
 # Stop on every error
@@ -26,7 +28,11 @@ try {
 
     & docker-compose --file $composeFilePath --project-name $ComposeProjectName down
     if (-Not $?) {
-        throw '"docker-compose down" failed'
+        Write-Error '"docker-compose down" failed'
+    }
+
+    if (-Not $KeepVolumes) {
+        & docker volume remove "$($composeProjectName)_wordpress" "$($composeProjectName)_db"
     }
 }
 catch {
