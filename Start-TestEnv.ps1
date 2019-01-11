@@ -9,7 +9,11 @@ param(
 
     [int] $Port = 8080,
 
-    [int] $MaxConnectRetries = 20
+    [int] $MaxConnectRetries = 20,
+
+    [string] $AdminUserName = 'admin',
+
+    [string] $AdminPassword = 'test1234'
 )
 
 # Stop on every error
@@ -104,8 +108,8 @@ try {
     Invoke-WordpressCli core install `
         "--url=localhost:$Port" `
         '--title=Wordpress Test Site' `
-        --admin_user=admin `
-        --admin_password=test1234 `
+        "--admin_user=$AdminUserName" `
+        "--admin_password=$AdminPassword" `
         '--admin_email=test@test.com' `
         --skip-email `
         --color
@@ -126,6 +130,17 @@ try {
             Invoke-WordpressCli @commandArgs
         }
     }
+
+    Write-Host
+    Write-Host
+    Write-Host 'Your Wordpress test env is now available at:'
+    Write-Host
+    Write-Host -ForegroundColor Cyan "    http://localhost:$Port"
+    Write-Host
+    Write-Host "Admin Login: "
+    Write-Host
+    Write-Host -ForegroundColor Cyan "    $AdminUserName // $AdminPassword"
+    Write-Host
 }
 catch {
     # IMPORTANT: We compare type names(!) here - not actual types. This is important because - for example -
