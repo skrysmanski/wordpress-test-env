@@ -56,7 +56,7 @@ try {
     }
 
     Write-Host
-    Write-Host 'Waiting for containers to come up...'
+    Write-Host 'Waiting for containers to come up (this may take some time)...'
 
     for ($i = 0; $i -lt $MaxConnectRetries; $i++) {
         try {
