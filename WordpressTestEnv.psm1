@@ -68,6 +68,11 @@ function New-WordpressTestEnvComposeFile([string] $ComposeProjectName, [string] 
         $volumesString = $volumesString.TrimEnd("`n")
     }
 
+    # Docker images:
+    #
+    # * https://hub.docker.com/_/wordpress
+    # * https://hub.docker.com/_/mysql
+    #
     $contents = @"
 version: '3.1'
 
