@@ -18,6 +18,8 @@ try {
 
     Import-Module "$PSScriptRoot/WordpressTestEnv.psm1" -DisableNameChecking
 
+    Write-Title 'Stopping Docker containers...'
+
     $projectDescriptor = Get-ProjectDescriptor $ProjectFile
 
     $wordpressTag = Get-DockerWordpressTag -WordpressVersion $WordpressVersion -PhpVersion $PhpVersion
@@ -32,7 +34,12 @@ try {
     }
 
     if (-Not $KeepVolumes) {
+        Write-Title 'Deleting volumes...'
         & docker volume remove "$($composeProjectName)_wordpress" "$($composeProjectName)_db"
+        if (-Not $?) {
+            # NOTE: We don't need to stop the script here with "Write-Error".
+            Write-Host -ForegroundColor Red 'Some errors while deleting volumes.'
+        }
     }
 }
 catch {

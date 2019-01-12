@@ -1,6 +1,11 @@
 # Stop on every error
 $script:ErrorActionPreference = 'Stop'
 
+function Write-Title($Text) {
+    Write-Host
+    Write-Host -ForegroundColor Cyan $Text
+}
+
 function Get-ProjectDescriptor([string] $ProjectFile) {
     if ([string]::IsNullOrWhiteSpace($ProjectFile)) {
         Write-Error 'No project file has been specified.'

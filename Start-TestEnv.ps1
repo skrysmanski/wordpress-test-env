@@ -24,6 +24,8 @@ try {
 
     Import-Module "$PSScriptRoot/WordpressTestEnv.psm1" -DisableNameChecking
 
+    Write-Title 'Spinning up Docker containers...'
+
     $projectDescriptor = Get-ProjectDescriptor $ProjectFile
 
     $wordpressTag = Get-DockerWordpressTag -WordpressVersion $WordpressVersion -PhpVersion $PhpVersion
@@ -55,8 +57,7 @@ try {
         throw '"docker-compose up" failed'
     }
 
-    Write-Host
-    Write-Host 'Waiting for containers to come up (this may take some time)...'
+    Write-Title 'Waiting for containers to come up (this may take some time)...'
 
     for ($i = 0; $i -lt $MaxConnectRetries; $i++) {
         try {
@@ -103,8 +104,7 @@ try {
         }
     }
 
-    Write-Host
-    Write-Host -ForegroundColor Cyan 'Installing WordPress...'
+    Write-Title 'Installing WordPress...'
     Invoke-WordpressCli core install `
         "--url=localhost:$Port" `
         '--title=Wordpress Test Site' `
@@ -123,8 +123,7 @@ try {
                 }
             }
 
-            Write-Host
-            Write-Host -ForegroundColor Cyan $setupCommand.Title
+            Write-Title $setupCommand.Title
 
             $commandArgs = $setupCommand.CommandArgs
             Invoke-WordpressCli @commandArgs
