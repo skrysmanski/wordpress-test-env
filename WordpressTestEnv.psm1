@@ -16,6 +16,13 @@ function Get-ProjectDescriptor([string] $ProjectFile) {
 }
 
 function Get-DockerWordpressTag([string] $WordpressVersion, [string] $PhpVersion) {
+    # NOTE: Instead of using the "latest" tag we obtain the newest Wordpress version
+    #   using a REST API. "latest" won't always point to the newest version if cached
+    #   locally (see https://medium.com/@mccode/the-misunderstood-docker-tag-latest-af3babfd6375).
+    if ($WordpressVersion -eq '') {
+        $WordpressVersion = Get-LatestWordpressVersion
+    }
+
     if (($WordpressVersion -ne '') -and ($PhpVersion -ne '')) {
         return "$WordpressVersion-php$PhpVersion"
     }
@@ -26,7 +33,7 @@ function Get-DockerWordpressTag([string] $WordpressVersion, [string] $PhpVersion
         return "php$PhpVersion"
     }
     else {
-        return 'latest'
+        throw 'We should not get here.'
     }
 }
 
@@ -98,4 +105,34 @@ volumes:
     $contents | Out-File $composeFilePath -Encoding 'utf8'
 
     return $composeFilePath
+}
+
+function Get-LatestWordpressVersion() {
+    if ($script:LatestWordpressVersion) {
+        return $script:LatestWordpressVersion
+    }
+
+    Write-Host -ForegroundColor DarkGray 'Determining latest Wordpress version...'
+
+    # For reference, see:
+    # * https://codex.wordpress.org/WordPress.org_API#Version_Check
+    # * https://developer.wordpress.org/reference/functions/wp_version_check/
+    $httpResponse = Invoke-WebRequest -Uri "https://api.wordpress.org/core/version-check/1.7/?version=5.0.2" -RetryIntervalSec 2 -MaximumRetryCount 3
+
+    if ($httpResponse.StatusCode -ne 200) {
+        Write-Error "Could not determine newest Wordpress version. Got HTTP status code $($httpResponse.StatusCode)"
+    }
+
+    $response = $httpResponse.Content | ConvertFrom-Json
+
+    $version = $response.offers[0].version
+
+    if ([string]::IsNullOrWhiteSpace($version)) {
+        Write-Error 'Could not determine newest Wordpress version. Received unexpected JSON.'
+    }
+
+    # Cache this for the duration of the script.
+    $script:LatestWordpressVersion = $version
+
+    return $version
 }
