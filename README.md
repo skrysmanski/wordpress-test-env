@@ -2,6 +2,8 @@
 
 This repository provides an easy way to spin up and tear down Wordpress environments using Docker.
 
+**Important:** The scripts in this repository spin up a **test environment**. Do **not use this in production**!!!
+
 ## Requirements
 
 * Docker
