@@ -46,6 +46,9 @@ try {
             Write-Host -ForegroundColor Red 'Some errors while deleting volumes.'
         }
     }
+
+    # Delete compose file
+    Remove-Item $composeFilePath | Out-Null
 }
 catch {
     # IMPORTANT: We compare type names(!) here - not actual types. This is important because - for example -
