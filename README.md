@@ -31,7 +31,7 @@ Then create the following 3 files:
 
 ### `wordpress-env.json`
 
-The content below is just an example and you need to adjust it to whatever you need.
+The content below is **just an example** and you need to adjust it to whatever you need.
 
 ```json
 {
