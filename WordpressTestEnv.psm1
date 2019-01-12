@@ -84,7 +84,7 @@ services:
         depends_on:
             - db
         ports:
-            - $($Port):80
+            - 127.0.0.1:$($Port):80
         volumes:
             - wordpress:/var/www/html
 $volumesString
