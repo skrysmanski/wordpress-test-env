@@ -127,7 +127,7 @@ function Get-LatestWordpressVersion() {
     # For reference, see:
     # * https://codex.wordpress.org/WordPress.org_API#Version_Check
     # * https://developer.wordpress.org/reference/functions/wp_version_check/
-    $httpResponse = Invoke-WebRequest -Uri "https://api.wordpress.org/core/version-check/1.7/?version=5.0.2" -RetryIntervalSec 2 -MaximumRetryCount 3
+    $httpResponse = Invoke-WebRequest -Uri "https://api.wordpress.org/core/version-check/1.7/?version=5.0.2"
 
     if ($httpResponse.StatusCode -ne 200) {
         Write-Error "Could not determine newest Wordpress version. Got HTTP status code $($httpResponse.StatusCode)"
