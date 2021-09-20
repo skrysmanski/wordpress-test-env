@@ -106,7 +106,7 @@ try {
         #   Alpine while the actual image is Debian). See also: https://github.com/docker-library/wordpress/issues/256
         & docker run -it --rm --user 33 --volumes-from $containerId --network container:$containerId wordpress:cli @args
         if (-Not $?) {
-            Write-Error "Wordpress CLI failed: $args"
+            throw "Wordpress CLI failed: $args"
         }
     }
 
