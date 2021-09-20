@@ -111,7 +111,7 @@ volumes:
     db:
 "@
 
-    $composeFilePath = Get-ComposeFilePAth -ComposeProjectName $ComposeProjectName
+    $composeFilePath = Get-ComposeFilePath -ComposeProjectName $ComposeProjectName
     $contents | Out-File $composeFilePath -Encoding 'utf8'
 
     return $composeFilePath
