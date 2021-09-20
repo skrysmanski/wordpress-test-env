@@ -1,5 +1,5 @@
 #!/usr/bin/env pwsh
-[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingPlainTextForPassword')]
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingPlainTextForPassword', '')]
 param(
     [Parameter(Mandatory=$True)]
     [string] $ProjectFile,
