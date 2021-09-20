@@ -87,6 +87,8 @@ try {
         throw 'Could not determine container id of web container'
     }
 
+    Write-Host -ForegroundColor DarkGray "Wordpress container id: $containerId"
+
     # Fix some permissions that are broken due to mounting the plugin.
     & docker exec -t $containerId chown www-data /var/www/html/wp-content /var/www/html/wp-content/plugins
     if (-Not $?) {
@@ -104,7 +106,7 @@ try {
         # IMPORTANT: We need to specify the user id (33) explicitely here because in the CLI image the user id
         #   for www-data is different than in the actual wordpress image (most likely because the cli image is
         #   Alpine while the actual image is Debian). See also: https://github.com/docker-library/wordpress/issues/256
-        & docker run -it --rm --user 33 --volumes-from $containerId --network container:$containerId wordpress:cli @args
+        & docker run -it --rm --user 33 --volumes-from $containerId --network container:$containerId -e WORDPRESS_DB_HOST=db -e WORDPRESS_DB_NAME=wpdb -e WORDPRESS_DB_USER=wordpress -e WORDPRESS_DB_PASSWORD=insecure-password123 wordpress:cli wp @args
         if (-Not $?) {
             throw "Wordpress CLI failed: $args"
         }
