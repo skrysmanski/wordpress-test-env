@@ -122,7 +122,7 @@ function Get-LatestWordpressVersion() {
         return $script:LatestWordpressVersion
     }
 
-    Write-Host -ForegroundColor DarkGray 'Determining latest Wordpress version...'
+    Write-Host -ForegroundColor DarkGray -NoNewline 'Determining latest Wordpress version...'
 
     # For reference, see:
     # * https://codex.wordpress.org/WordPress.org_API#Version_Check
@@ -140,6 +140,8 @@ function Get-LatestWordpressVersion() {
     if ([string]::IsNullOrWhiteSpace($version)) {
         Write-Error 'Could not determine newest Wordpress version. Received unexpected JSON.'
     }
+
+    Write-Host -ForegroundColor DarkCyan $version
 
     # Cache this for the duration of the script.
     $script:LatestWordpressVersion = $version
