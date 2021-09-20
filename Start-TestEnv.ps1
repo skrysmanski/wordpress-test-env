@@ -53,8 +53,13 @@ try {
         -Port $Port `
         -Volumes $volumes
 
+    Write-Host -ForegroundColor DarkGray "Using generated Docker compose file at: $composeFilePath"
+
     & docker-compose --file $composeFilePath --project-name $composeProjectName up --detach
     if (-Not $?) {
+        if (-Not (Test-DockerIsRunning)) {
+            Write-Error "Docker is not running."
+        }
         throw '"docker-compose up" failed'
     }
 

@@ -6,6 +6,13 @@ function Write-Title($Text) {
     Write-Host -ForegroundColor Cyan $Text
 }
 
+# Tests whether Docker is running. Note that this check takes about 3 seconds
+# if Docker is not running. So you should not use it frequently.
+function Test-DockerIsRunning() {
+    & docker info | Out-Null
+    return $?
+}
+
 function Get-ProjectDescriptor([string] $ProjectFile) {
     if ([string]::IsNullOrWhiteSpace($ProjectFile)) {
         Write-Error 'No project file has been specified.'
