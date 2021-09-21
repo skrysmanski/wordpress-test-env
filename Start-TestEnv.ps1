@@ -63,7 +63,7 @@ try {
         throw '"docker-compose up" failed'
     }
 
-    Write-Title 'Waiting for containers to come up (this may take some time)...'
+    Write-Title 'Waiting for _web container to come up (this may take some time)...'
 
     for ($i = 0; $i -lt $MaxConnectRetries; $i++) {
         try {
@@ -77,7 +77,7 @@ try {
                 Write-Host -ForegroundColor DarkGray "Attempt: $($i + 2)"
             }
             else {
-                Write-Error 'Containers did not come up'
+                Write-Error 'Container did not come up'
             }
         }
     }
@@ -109,6 +109,25 @@ try {
         & docker run -it --rm --user 33 --volumes-from $containerId --network container:$containerId -e WORDPRESS_DB_HOST=db -e WORDPRESS_DB_NAME=wpdb -e WORDPRESS_DB_USER=wordpress -e WORDPRESS_DB_PASSWORD=insecure-password123 wordpress:cli wp @args
         if (-Not $?) {
             throw "Wordpress CLI failed: $args"
+        }
+    }
+
+    Write-Title 'Waiting for _db container to come up (this may take some time)...'
+
+    for ($i = 0; $i -lt $MaxConnectRetries; $i++) {
+        try {
+            Invoke-WordpressCli db check | Out-Null
+            Write-Host -ForegroundColor Green 'Container is up'
+            break
+        }
+        catch {
+            if ($i -lt ($MaxConnectRetries - 1)) {
+                Start-Sleep -Seconds 3
+                Write-Host -ForegroundColor DarkGray "Attempt: $($i + 2)"
+            }
+            else {
+                Write-Error 'Container did not come up'
+            }
         }
     }
 
