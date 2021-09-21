@@ -135,7 +135,7 @@ try {
         }
     }
 
-    Write-Title 'Installing WordPress...'
+    Write-Title 'Setting up WordPress...'
     Invoke-WordpressCli core install `
         "--url=localhost:$Port" `
         '--title=Wordpress Test Site' `
