@@ -105,8 +105,12 @@ try {
         #
         # IMPORTANT: We need to specify the user id (33) explicitely here because in the CLI image the user id
         #   for www-data is different than in the actual wordpress image (most likely because the cli image is
-        #   Alpine while the actual image is Debian). See also: https://github.com/docker-library/wordpress/issues/256
-        & docker run -it --rm --user 33 --volumes-from $containerId --network container:$containerId -e WORDPRESS_DB_HOST=db -e WORDPRESS_DB_NAME=wpdb -e WORDPRESS_DB_USER=wordpress -e WORDPRESS_DB_PASSWORD=insecure-password123 wordpress:cli wp @args
+        #   Alpine while the actual image is Debian).
+        #
+        #   See also:
+        #   * https://github.com/docker-library/docs/tree/master/wordpress#running-as-an-arbitrary-user (official statement)
+        #   * https://github.com/docker-library/wordpress/issues/256
+        & docker run -it --rm --user 33 --volumes-from $containerId --network container:$containerId -e HOME=/tmp -e WORDPRESS_DB_HOST=db -e WORDPRESS_DB_NAME=wpdb -e WORDPRESS_DB_USER=wordpress -e WORDPRESS_DB_PASSWORD=insecure-password123 wordpress:cli wp @args
         if (-Not $?) {
             throw "Wordpress CLI failed: $args"
         }
