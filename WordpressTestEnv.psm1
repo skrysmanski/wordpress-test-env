@@ -58,7 +58,7 @@ function Get-ComposeFilePath([string] $ComposeProjectName) {
     return "$PSScriptRoot/envs/docker-compose.$($ComposeProjectName).yml"
 }
 
-function New-WordpressTestEnvComposeFile([string] $ComposeProjectName, [string] $WordpressTag, [int] $Port, [string[]] $volumes) {
+function New-WordpressTestEnvComposeFile([string] $ComposeProjectName, [string] $WordpressTag, [string] $MySqlTag, [int] $Port, [string[]] $volumes) {
     $DB_NAME = 'wpdb'
     $DB_USER = 'wordpress'
     $DB_PASSWORD = 'insecure-password123'
@@ -103,7 +103,7 @@ $volumesString
             WORDPRESS_DEBUG: '1'
 
     db:
-        image: mysql:5.7
+        image: mysql:$MySqlTag
         container_name: $($ComposeProjectName)_db
         volumes:
             - db:/var/lib/mysql

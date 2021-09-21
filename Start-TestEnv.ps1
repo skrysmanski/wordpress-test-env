@@ -8,6 +8,8 @@ param(
 
     [string] $PhpVersion = '',
 
+    [string] $MySqlVersion = '',
+
     [int] $Port = 8080,
 
     [int] $MaxConnectRetries = 20,
@@ -31,6 +33,18 @@ try {
 
     $wordpressTag = Get-DockerWordpressTag -WordpressVersion $WordpressVersion -PhpVersion $PhpVersion
 
+    if ($MySqlVersion) {
+        if ([System.Version]::Parse($MySqlVersion).Major -ge 8) {
+            # The call to "wp db check" will always fail with:
+            # Got error: 1045: Plugin caching_sha2_password could not be loaded: ...
+            Write-Error "MySQL version 8.x or higher are not supported (by the wordpress cli image)."
+        }
+        $mySqlTag = $MySqlVersion
+    }
+    else {
+        $mySqlTag = '5.7'
+    }
+
     $composeProjectName = Get-DockerComposeProjectName -ProjectName $projectDescriptor.ProjectName -WordpressTag $wordpressTag
 
     $volumes = @()
@@ -50,6 +64,7 @@ try {
     $composeFilePath = New-WordpressTestEnvComposeFile `
         -ComposeProjectName $composeProjectName `
         -WordpressTag $wordpressTag `
+        -MySqlTag $mySqlTag `
         -Port $Port `
         -Volumes $volumes
 
