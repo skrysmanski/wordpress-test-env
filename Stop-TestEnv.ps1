@@ -36,11 +36,7 @@ try {
     if (-Not $KeepVolumes) {
         Write-Title 'Deleting volumes...'
 
-        # NOTE: Apparently, volume names don't allow for '.' in their names.
-        #   They're simply stripped.
-        $projectNameForVolumes = $composeProjectName.Replace('.', '')
-
-        & docker volume remove "$($projectNameForVolumes)_wordpress" "$($projectNameForVolumes)_db"
+        & docker volume remove "$($composeProjectName)_wordpress" "$($composeProjectName)_db"
         if (-Not $?) {
             # NOTE: We don't need to stop the script here with "Write-Error".
             Write-Host -ForegroundColor Red 'Some errors while deleting volumes.'
